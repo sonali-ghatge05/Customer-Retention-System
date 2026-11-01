@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <h2 class="page-title mb-4">
+        <i class="bi bi-person-circle"></i>
+        My Profile
+    </h2>
+
+    <div class="profile-card">
+
+        <div class="text-center">
+
+            <div class="profile-avatar">
+
+                {{ admin[1][0]|upper }}
+
+            </div>
+
+            <h3 class="mt-3">
+
+                {{ admin[1] }}
+
+            </h3>
+
+            <p class="text-secondary">
+
+                Administrator
+
+            </p>
+
+        </div>
+
+        <hr>
+
+        <table class="table table-borderless">
+
+            <tr>
+                <th>Admin ID</th>
+                <td>{{ admin[0] }}</td>
+            </tr>
+
+            <tr>
+                <th>Username</th>
+                <td>{{ admin[1] }}</td>
+            </tr>
+
+            <tr>
+                <th>Role</th>
+                <td>Administrator</td>
+            </tr>
+
+            <tr>
+                <th>Status</th>
+                <td>
+                    <span class="badge bg-success">
+                        Active
+                    </span>
+                </td>
+            </tr>
+
+        </table>
+
+        <div class="text-center mt-4">
+
+            <a href="{{ url_for('change_password') }}" class="btn btn-primary">
+
+                <i class="bi bi-key-fill me-2"></i>
+
+                Change Password
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

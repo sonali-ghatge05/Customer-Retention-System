@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- ================= HERO ================= -->
+<div class="hero-banner mb-5">
+    <div class="hero-content">
+        <span class="hero-badge">
+            <i class="bi bi-stars me-1"></i> Welcome
+        </span>
+
+        <h1 class="hero-title">
+            Customer Retention System
+        </h1>
+
+        <p class="text-white" style="line-height: 1.6; font-size: 1.1rem;color: rgba(239, 233, 233, 0.85);
+    margin-bottom: 28px;" >
+           Predict customer churn, understand behaviour, and improve loyalty
+            with powerful data-driven insights.
+           
+        </p>
+
+        <div class="hero-actions">
+            <a href="/dashboard" class="btn btn-primary btn-lg">
+                <i class="bi bi-bar-chart-fill me-2"></i>
+                View Dashboard
+            </a>
+            <a href="/customers" class="btn btn-outline-light btn-lg">
+                <i class="bi bi-people-fill me-2"></i>
+                Manage Customers
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- ================= FEATURE CARDS ================= -->
+<div class="row g-4 mb-5">
+
+    <div class="col-lg-3 col-md-6">
+        <div class="feature-card">
+            <div class="feature-icon bg-primary-soft">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <h5>Customer Management</h5>
+            <p>Add, update, and manage customer records efficiently.</p>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="feature-card">
+            <div class="feature-icon bg-success-soft">
+                <i class="bi bi-bar-chart-fill"></i>
+            </div>
+            <h5>Dashboard Analytics</h5>
+            <p>Monitor customer metrics and business performance.</p>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="feature-card">
+            <div class="feature-icon bg-warning-soft">
+                <i class="bi bi-search"></i>
+            </div>
+            <h5>Customer Analysis</h5>
+            <p>Analyze behaviour and identify churn risks early.</p>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="feature-card">
+            <div class="feature-icon bg-danger-soft">
+                <i class="bi bi-lightbulb-fill"></i>
+            </div>
+            <h5>Smart Recommendations</h5>
+            <p>Get personalized retention strategies for every customer.</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- ================= HOW IT WORKS ================= -->
+<section class="workflow-section mb-5">
+    <div class="section-header text-center mb-5">
+        <h2>How It Works</h2>
+        <p>Follow the customer retention process from data import to recommendations.</p>
+    </div>
+
+    <div class="workflow-steps">
+        <div class="workflow-step">
+            <div class="step-number">1</div>
+            <div class="step-icon">
+                <i class="bi bi-upload"></i>
+            </div>
+            <h6>Upload CSV</h6>
+            <small>Import customer records</small>
+        </div>
+
+        <div class="workflow-connector"></div>
+
+        <div class="workflow-step">
+            <div class="step-number">2</div>
+            <div class="step-icon">
+                <i class="bi bi-database-fill"></i>
+            </div>
+            <h6>Store Data</h6>
+            <small>Customer database</small>
+        </div>
+
+        <div class="workflow-connector"></div>
+
+        <div class="workflow-step">
+            <div class="step-number">3</div>
+            <div class="step-icon">
+                <i class="bi bi-cpu-fill"></i>
+            </div>
+            <h6>Predict</h6>
+            <small>ML churn prediction</small>
+        </div>
+
+        <div class="workflow-connector"></div>
+
+        <div class="workflow-step">
+            <div class="step-number">4</div>
+            <div class="step-icon">
+                <i class="bi bi-graph-up-arrow"></i>
+            </div>
+            <h6>Analyze</h6>
+            <small>Risk analysis</small>
+        </div>
+
+        <div class="workflow-connector"></div>
+
+        <div class="workflow-step">
+            <div class="step-number">5</div>
+            <div class="step-icon">
+                <i class="bi bi-lightbulb-fill"></i>
+            </div>
+            <h6>Retain</h6>
+            <small>Recommendations</small>
+        </div>
+    </div>
+</section>
+
+<!-- ================= QUICK ACTIONS ================= -->
+<section class="mb-4">
+    <div class="section-header text-center mb-4">
+        <h2>Quick Actions</h2>
+        <p>Access the most frequently used features with one click.</p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-lg-3 col-md-6">
+            <a href="/upload-csv" class="quick-action-link">
+                <div class="quick-action-card">
+                    <div class="quick-icon">
+                        <i class="bi bi-cloud-arrow-up-fill"></i>
+                    </div>
+                    <h5>Upload CSV</h5>
+                    <p>Import customer records</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <a href="/customers" class="quick-action-link">
+                <div class="quick-action-card">
+                    <div class="quick-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h5>Customers</h5>
+                    <p>Manage customer information</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <a href="/dashboard" class="quick-action-link">
+                <div class="quick-action-card">
+                    <div class="quick-icon">
+                        <i class="bi bi-bar-chart-fill"></i>
+                    </div>
+                    <h5>Dashboard</h5>
+                    <p>View analytics and insights</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <a href="/logout" class="quick-action-link">
+                <div class="quick-action-card">
+                    <div class="quick-icon logout-icon">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </div>
+                    <h5>Logout</h5>
+                    <p>Securely sign out</p>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}

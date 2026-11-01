@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+                <!-- Header -->
+                <div class="bg-primary bg-gradient text-white px-4 py-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                             style="width: 52px; height: 52px;">
+                            <i class="bi bi-pencil-square fs-3"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0 fw-semibold">Update Customer</h4>
+                            <p class="mb-0 opacity-75 small">Edit the customer details below</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Body -->
+                <div class="card-body p-4 p-md-5">
+                    <form method="POST" action="/update-customers/{{ customer[0] }}" novalidate>
+
+                        <div class="row g-3">
+
+                            <!-- Full Name -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Full Name <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-person text-muted"></i>
+                                    </span>
+                                    <input type="text"
+                                           class="form-control border-start-0 ps-0"
+                                           name="name"
+                                           value="{{ customer[1] }}"
+                                           placeholder="e.g. Rahul Sharma"
+                                           required>
+                                </div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Email <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-envelope text-muted"></i>
+                                    </span>
+                                    <input type="email"
+                                           class="form-control border-start-0 ps-0"
+                                           name="email"
+                                           value="{{ customer[2] }}"
+                                           placeholder="name@example.com"
+                                           required>
+                                </div>
+                            </div>
+
+                            <!-- Age -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Age <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-calendar3 text-muted"></i>
+                                    </span>
+                                    <input type="number"
+                                           class="form-control border-start-0 ps-0"
+                                           name="age"
+                                           value="{{ customer[3] }}"
+                                           placeholder="Enter age"
+                                           min="1" max="120"
+                                           required>
+                                </div>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Gender <span class="text-danger">*</span></label>
+                                <select class="form-select" name="gender" required>
+                                    <option value="" disabled>Select gender</option>
+                                    <option value="Male"   {% if customer[4] == 'Male' %}selected{% endif %}>Male</option>
+                                    <option value="Female" {% if customer[4] == 'Female' %}selected{% endif %}>Female</option>
+                                    <option value="Other"  {% if customer[4] == 'Other' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Location <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0">
+                                        <i class="bi bi-geo-alt text-muted"></i>
+                                    </span>
+                                    <input type="text"
+                                           class="form-control border-start-0 ps-0"
+                                           name="location"
+                                           value="{{ customer[5] }}"
+                                           placeholder="City / State"
+                                           required>
+                                </div>
+                            </div>
+
+                            <!-- Segment -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Customer Segment <span class="text-danger">*</span></label>
+                                <select class="form-select" name="segment" required>
+                                    <option value="" disabled>Select segment</option>
+                                    <option value="Premium" {% if customer[6] == 'Premium' %}selected{% endif %}>Premium</option>
+                                    <option value="Regular" {% if customer[6] == 'Regular' %}selected{% endif %}>Regular</option>
+                                    <option value="New"     {% if customer[6] == 'New' %}selected{% endif %}>New</option>
+                                </select>
+                            </div>
+
+                            <!-- Join Date -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Join Date <span class="text-danger">*</span></label>
+                                <input type="date"
+                                       class="form-control"
+                                       name="join_date"
+                                       value="{{ customer[7] }}"
+                                       required>
+                            </div>
+
+                            <!-- Customer Status -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Customer Status <span class="text-danger">*</span></label>
+                                <select class="form-select" name="churned" required>
+                                    <option value="0" {% if customer[8] == 0 %}selected{% endif %}>Active (Retained)</option>
+                                    <option value="1" {% if customer[8] == 1 %}selected{% endif %}>Churned</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 mt-5 pt-3 border-top">
+                            <a href="/customers" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Customers
+                            </a>
+
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-check2-circle me-2"></i>Update Customer
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

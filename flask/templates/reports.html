@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold">Report Center</h2>
+            <p class="text-secondary mb-0">
+                Generate, preview and export business reports.
+            </p>
+        </div>
+
+        <span class="badge bg-primary px-3 py-2">
+            <i class="bi bi-file-earmark-bar-graph me-2"></i>
+            Business Reports
+        </span>
+
+    </div>
+
+    <!-- Report Cards -->
+    <div class="row g-4">
+
+        <!-- Customer Report -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>
+                                <i class="bi bi-people-fill text-primary me-2"></i>
+                                Customer Report
+                            </h4>
+
+                            <p class="text-muted">
+                                Complete customer information including profile,
+                                segment and churn status.
+                            </p>
+                        </div>
+
+                        <div class="display-5 text-primary">
+                            <i class="bi bi-file-earmark-text"></i>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex gap-2">
+                        <a href="/report/customer"
+                           class="btn btn-primary">
+                            <i class="bi bi-eye"></i>
+                            Preview
+                        </a>
+
+                        <button class="btn btn-outline-light" disabled>
+                            <i class="bi bi-file-earmark-pdf"></i>
+                            PDF
+                        </button>
+
+                        <button class="btn btn-outline-light" disabled>
+                            <i class="bi bi-filetype-csv"></i>
+                            CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prediction Report -->
+        <div class="col-lg-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4>
+                        <i class="bi bi-cpu text-info me-2"></i>
+                        Prediction Report
+                    </h4>
+                    <p class="text-muted">
+                        View customer churn predictions, risk levels, confidence scores, and AI prediction history.
+                    </p>
+                    <hr>
+                    <div class="d-flex gap-2">
+                        <a href="/report/prediction"
+                           class="btn btn-primary">
+                            <i class="bi bi-eye"></i>
+                            Preview
+                        </a>
+
+                        <button class="btn btn-outline-light" disabled>
+                            <i class="bi bi-file-earmark-pdf"></i>
+                            PDF
+                        </button>
+
+                        <button class="btn btn-outline-light" disabled>
+                            <i class="bi bi-filetype-csv"></i>
+                            CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+       <!-- Overall System Report -->
+<div class="col-lg-6">
+    <div class="card h-100">
+        <div class="card-body">
+
+            <h4>
+                <i class="bi bi-bar-chart-line-fill text-primary me-2"></i>
+                Overall System Report
+            </h4>
+
+            <p class="text-muted">
+                Comprehensive business report containing customer statistics,
+                churn analysis, prediction summary, sentiment analysis,
+                revenue insights, and top-performing customers.
+            </p>
+
+            <hr>
+
+            <div class="d-flex gap-2">
+                <a href="{{ url_for('overall_report') }}"
+                   class="btn btn-primary">
+                    <i class="bi bi-eye-fill me-1"></i>
+                    Preview
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+</div> 
+
+    </div>
+</div>
+
+{% endblock %}

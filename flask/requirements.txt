@@ -1,0 +1,12 @@
+
+Flask
+Flask-MySQLdb
+PyMySQL
+pandas
+scikit-learn
+vaderSentiment
+python-dotenv
+google-genai
+Markdown
+reportlab
+gunicorn

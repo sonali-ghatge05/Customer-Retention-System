@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="card shadow border-0">
+
+        <div class="card-header bg-primary text-white">
+
+            <h3 class="mb-0">
+                <i class="bi bi-cpu-fill"></i>
+                Customer Churn Prediction
+            </h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-md-6">
+
+                    <h5>Customer Information</h5>
+
+                    <table class="table">
+
+                        <tr>
+                            <th>Customer ID</th>
+                            <td>{{ result.customer_id }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Prediction</th>
+                            <td>
+                                {% if result.prediction == 1 %}
+                                    <span class="badge bg-danger">
+                                        Will Churn
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-success">
+                                        Will Stay
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>Risk Level</th>
+
+                            <td>
+
+                                {% if result.risk_level == "High Risk" %}
+
+                                    <span class="badge bg-danger">
+
+                                        {{ result.risk_level }}
+
+                                    </span>
+
+                                {% elif result.risk_level == "Medium Risk" %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        {{ result.risk_level }}
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-success">
+
+                                        {{ result.risk_level }}
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>Churn Probability</th>
+
+                            <td>
+
+                                {{ result.churn_probability }}%
+
+                            </td>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+                <div class="col-md-6">
+
+                    <h5>Prediction Insight</h5>
+
+                    <div class="text-center">
+
+                        <h1 class="display-3">
+
+                            {{ result.churn_probability }}%
+
+                        </h1>
+
+                        <p class="text-muted">
+
+                            Probability of Churn
+
+                        </p>
+
+                    </div>
+
+                    {% if result.warning %}
+
+                    <div class="alert alert-warning">
+
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+
+                        {{ result.warning }}
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="alert alert-success">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        Customer satisfaction looks good.
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <h4>Recommendation</h4>
+
+            {% if result.risk_level == "High Risk" %}
+
+            <div class="alert alert-danger">
+
+                • Contact customer immediately.<br>
+
+                • Offer discount or loyalty reward.<br>
+
+                • Schedule follow-up call.
+
+            </div>
+
+            {% elif result.risk_level == "Medium Risk" %}
+
+            <div class="alert alert-warning">
+
+                • Send promotional offers.<br>
+
+                • Collect feedback.<br>
+
+                • Monitor future purchases.
+
+            </div>
+
+            {% else %}
+
+            <div class="alert alert-success">
+
+                • Continue regular engagement.<br>
+
+                • Reward loyalty.<br>
+
+                • Recommend premium products.
+
+            </div>
+
+            {% endif %}
+
+            <div class="mt-4">
+
+                <a href="{{ url_for('customers') }}"
+                   class="btn btn-secondary">
+
+                    Back
+
+                </a>
+
+                <a href="{{ url_for('dashboard') }}"
+                   class="btn btn-primary">
+
+                    Dashboard
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="ai-analyst-page">
+
+    <!-- Header -->
+    <div class="ai-header">
+        <h1>🤖 AI Business Analyst</h1>
+        <p class="subtitle">AI-powered business insights from your customer data</p>
+    </div>
+
+    <!-- Select Customer Card -->
+    <div class="ai-card select-card">
+    <h3>Select Customer</h3>
+    <p class="hint">Search and select a customer to generate personalized business insights.</p>
+
+    <form method="GET" action="{{ url_for('ai_analyst') }}" class="select-form" id="customerForm">
+        
+        <!-- Searchable Input -->
+        <div class="search-wrapper">
+            <input 
+                type="text" 
+                id="customerSearch" 
+                class="customer-search"
+                placeholder="🔍 Search by customer name or email..."
+                autocomplete="off"
+                value="{% if selected_customer %}{{ selected_customer[1] }}{% endif %}"
+            >
+
+            <!-- Hidden field that actually submits the ID -->
+            <input type="hidden" name="customer_id" id="customerId" 
+                   value="{% if selected_customer %}{{ selected_customer[0] }}{% endif %}">
+
+            <!-- Dropdown results -->
+            <div class="search-results" id="searchResults"></div>
+        </div>
+
+        <button type="submit" id="analyzeBtn" class="btn-analyze">
+            🤖 Analyze Customer
+        </button>
+    </form>
+</div>
+
+    {% if selected_customer %}
+
+    <!-- Customer Snapshot -->
+    <div class="snapshot-grid">
+        <div class="snap-card">
+            <span class="label">CUSTOMER</span>
+            <span class="value">{{ selected_customer[1] }}</span>
+        </div>
+        <div class="snap-card risk-card">
+            <span class="label">RISK</span>
+            <span class="value risk-{{ prediction[0]|lower|replace(' ', '-') }}">
+                {{ prediction[0] }}
+            </span>
+            <span class="confidence">
+                {% if prediction[1] is not none %}
+                    {{ "%.0f"|format(prediction[1]) }}% confidence
+                {% else %}
+                    N/A
+                {% endif %}
+            </span>
+        </div>
+        <div class="snap-card">
+            <span class="label">SEGMENT</span>
+            <span class="value">{{ selected_customer[5] or 'N/A' }}</span>
+        </div>
+        <div class="snap-card">
+            <span class="label">TRANSACTIONS</span>
+            <span class="value">{{ transaction_summary[0] or 0 }}</span>
+        </div>
+        <div class="snap-card">
+            <span class="label">AVERAGE SPEND</span>
+            <span class="value">₹{{ "%.2f"|format(transaction_summary[1] or 0) }}</span>
+        </div>
+        <div class="snap-card">
+            <span class="label">RATING</span>
+            <span class="value">
+                {% if feedback_summary[0] is not none %}
+                    ★ {{ "%.1f"|format(feedback_summary[0]) }} / 5
+                {% else %}
+                    No rating
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
+    <!-- AI Analysis -->
+    {% if ai_analysis_html %}
+    <div class="ai-card analysis-card">
+        <div class="analysis-header">
+            <h2>🤖 AI BUSINESS ANALYST</h2>
+            <p>Analysis generated from customer activity, feedback, transaction history and the existing risk assessment.</p>
+        </div>
+
+        <div class="analysis-content">
+            {{ ai_analysis_html | safe }}
+        </div>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="empty-state">
+        <div class="empty-icon">🤖</div>
+        <h3>AI BUSINESS ANALYST</h3>
+        <p>Select a customer to generate personalized business insights.</p>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- AI Loading Overlay -->
+<div id="aiLoadingOverlay" class="ai-loading-overlay">
+    <div class="ai-loading-card">
+        <div class="ai-loader">
+            <div class="ai-loader-ring"></div>
+            <span>🤖</span>
+        </div>
+        <h3>AI Analyst is thinking...</h3>
+        <p id="aiLoadingText">Analyzing customer data</p>
+        <div class="ai-loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <small>Reviewing transactions, feedback & risk</small>
+    </div>
+</div>
+
+<script>
+const customers = [
+    {% for c in customers %}
+    {
+        id: {{ c[0] }},
+        name: "{{ c[1] }}",
+        segment: "{{ c[5] or '' }}"
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+
+const searchInput = document.getElementById('customerSearch');
+const resultsBox = document.getElementById('searchResults');
+const hiddenId = document.getElementById('customerId');
+
+searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase().trim();
+    resultsBox.innerHTML = '';
+
+    if (query.length < 1) {
+        resultsBox.classList.remove('active');
+        return;
+    }
+
+    const filtered = customers.filter(c => 
+        c.name.toLowerCase().includes(query) || 
+        (c.segment && c.segment.toLowerCase().includes(query))
+    ).slice(0, 12);   // show max 12 results
+
+    if (filtered.length === 0) {
+        resultsBox.innerHTML = `<div class="search-item">No customers found</div>`;
+    } else {
+        filtered.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'search-item';
+            div.innerHTML = `${c.name} <span class="segment">${c.segment}</span>`;
+            div.addEventListener('click', () => {
+                searchInput.value = c.name;
+                hiddenId.value = c.id;
+                resultsBox.classList.remove('active');
+            });
+            resultsBox.appendChild(div);
+        });
+    }
+
+    resultsBox.classList.add('active');
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function (e) {
+    if (!e.target.closest('.search-wrapper')) {
+        resultsBox.classList.remove('active');
+    }
+});
+</script>
+<script>
+document.getElementById('analyzeBtn').addEventListener('click', function(e) {
+    const customerId = document.getElementById('customerId')?.value || 
+                       document.querySelector('select[name="customer_id"]')?.value;
+
+    // Only show loading if a customer is selected
+    if (!customerId) {
+        return; // let the form show its normal validation
+    }
+
+    // Show the loading overlay
+    document.getElementById('aiLoadingOverlay').classList.add('active');
+
+    // Optional: change the text every few seconds
+    const messages = [
+        "Analyzing customer data...",
+        "Reviewing transaction history...",
+        "Analyzing customer feedback...",
+        "Preparing business recommendations..."
+    ];
+
+    let i = 0;
+    const textEl = document.getElementById('aiLoadingText');
+    
+    const interval = setInterval(() => {
+        i = (i + 1) % messages.length;
+        textEl.textContent = messages[i];
+    }, 1800);
+
+    // The form will submit normally, so the page will reload with results
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+
+{% block title %}Overall Report{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-4 py-4">
+
+    <!-- Page Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-bar-chart-fill text-primary me-2"></i>
+                Overall System Report
+            </h2>
+            <p class="text-secondary mb-0">Generated on {{ current_date }}</p>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('overall_pdf') }}" class="btn btn-primary">
+                <i class="bi bi-file-earmark-pdf me-2"></i>Export PDF
+            </a>
+            <a href="{{ url_for('overall_csv') }}" class="btn btn-success">
+                <i class="bi bi-file-earmark-spreadsheet me-2"></i>Export CSV
+            </a>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">Total Customers</p>
+                            <h3 class="fw-bold mb-0">{{ total_customers }}</h3>
+                        </div>
+                        <i class="bi bi-people-fill fs-1 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">Active Customers</p>
+                            <h3 class="fw-bold text-success mb-0">{{ active_customers }}</h3>
+                        </div>
+                        <i class="bi bi-person-check-fill fs-1 text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">Churned Customers</p>
+                            <h3 class="fw-bold text-danger mb-0">{{ churned_customers }}</h3>
+                        </div>
+                        <i class="bi bi-person-x-fill fs-1 text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">Predictions</p>
+                            <h3 class="fw-bold mb-0">{{ predictions }}</h3>
+                        </div>
+                        <i class="bi bi-cpu-fill fs-1 text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">High Risk</p>
+                            <h3 class="fw-bold text-danger mb-0">{{ high }}</h3>
+                        </div>
+                        <i class="bi bi-exclamation-triangle-fill fs-1 text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">Medium Risk</p>
+                            <h3 class="fw-bold text-warning mb-0">{{ medium }}</h3>
+                        </div>
+                        <i class="bi bi-exclamation-circle-fill fs-1 text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">Low Risk</p>
+                            <h3 class="fw-bold text-success mb-0">{{ low }}</h3>
+                        </div>
+                        <i class="bi bi-shield-check fs-1 text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">Avg Confidence</p>
+                            <h3 class="fw-bold mb-0">{{ avg_confidence }}%</h3>
+                        </div>
+                        <i class="bi bi-bullseye fs-1 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Segment Distribution -->
+    <div class="card dashboard-card mb-4">
+        <div class="card-header border-0">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-pie-chart-fill text-primary me-2"></i>
+                Customer Segment Distribution
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Segment</th>
+                            <th>Total Customers</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for segment, count in segment_data %}
+                        <tr>
+                            <td class="ps-4">{{ segment }}</td>
+                            <td>{{ count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sentiment Distribution -->
+    <div class="card dashboard-card mb-4">
+        <div class="card-header border-0">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-emoji-smile text-primary me-2"></i>
+                Sentiment Distribution
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Sentiment</th>
+                            <th>Total Feedback</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sentiment, count in sentiment_data %}
+                        <tr>
+                            <td class="ps-4">{{ sentiment }}</td>
+                            <td>{{ count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rating Summary -->
+    <div class="card dashboard-card mb-4">
+        <div class="card-header border-0">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-star-fill text-warning me-2"></i>
+                Customer Rating Summary
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <tbody>
+                        <tr>
+                            <th class="ps-4" style="width: 50%;">Average Rating</th>
+                            <td>{{ rating_summary[0] }}</td>
+                        </tr>
+                        <tr>
+                            <th class="ps-4">Highest Rating</th>
+                            <td>{{ rating_summary[1] }}</td>
+                        </tr>
+                        <tr>
+                            <th class="ps-4">Lowest Rating</th>
+                            <td>{{ rating_summary[2] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Revenue Summary -->
+    <div class="card dashboard-card mb-4">
+        <div class="card-header border-0">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-currency-rupee text-success me-2"></i>
+                Revenue Summary
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <tbody>
+                        <tr>
+                            <th class="ps-4" style="width: 50%;">Total Revenue</th>
+                            <td>₹{{ "{:,.2f}".format(transaction_summary[0]) if transaction_summary[0] else "0.00" }}</td>
+                        </tr>
+                        <tr>
+                            <th class="ps-4">Average Transaction</th>
+                            <td>₹{{ "{:,.2f}".format(transaction_summary[1]) if transaction_summary[1] else "0.00" }}</td>
+                        </tr>
+                        <tr>
+                            <th class="ps-4">Highest Purchase</th>
+                            <td>₹{{ "{:,.2f}".format(transaction_summary[2]) if transaction_summary[2] else "0.00" }}</td>
+                        </tr>
+                        <tr>
+                            <th class="ps-4">Total Transactions</th>
+                            <td>{{ transaction_summary[3] }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top 10 High Risk -->
+    <div class="card dashboard-card mb-4">
+        <div class="card-header border-0">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                Top 10 High Risk Customers
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Name</th>
+                            <th>Risk Level</th>
+                            <th>Confidence</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in top_risk %}
+                        <tr>
+                            <td class="ps-4">{{ c[0] }}</td>
+                            <td>{{ c[1] }}</td>
+                            <td>
+                                {% if c[2] == 'High Risk' %}
+                                    <span class="badge bg-danger">{{ c[2] }}</span>
+                                {% elif c[2] == 'Medium Risk' %}
+                                    <span class="badge bg-warning text-dark">{{ c[2] }}</span>
+                                {% else %}
+                                    <span class="badge bg-success">{{ c[2] }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ c[3] }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top 10 Valuable Customers -->
+    <div class="card dashboard-card mb-4">
+        <div class="card-header border-0">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-trophy-fill text-warning me-2"></i>
+                Top 10 Valuable Customers
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Name</th>
+                            <th>Total Spend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in top_customers %}
+                        <tr>
+                            <td class="ps-4">{{ c[0] }}</td>
+                            <td>{{ c[1] }}</td>
+                            <td>₹{{ "{:,.2f}".format(c[2]) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid px-4 py-4">
+
+    <!-- Header -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-speedometer2 text-primary me-2"></i>
+                Dashboard Overview
+            </h2>
+            <p class="text-secondary mb-0">
+                Monitor customer churn, retention and prediction insights
+            </p>
+        </div>
+
+        <span class="badge bg-primary bg-opacity-25 text-primary border border-primary px-3 py-2">
+            <i class="bi bi-broadcast me-1"></i> Live Dashboard
+        </span>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100 border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-secondary small mb-1">Total Customers</p>
+                            <h3 class="fw-bold mb-0">{{ total }}</h3>
+                        </div>
+                        <div class="bg-primary bg-opacity-10 rounded-3 p-2">
+                            <i class="bi bi-people-fill fs-4 text-primary"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100 border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-secondary small mb-1">Customers Lost</p>
+                            <h3 class="fw-bold text-danger mb-0">{{ churned }}</h3>
+                        </div>
+                        <div class="bg-danger bg-opacity-10 rounded-3 p-2">
+                            <i class="bi bi-person-x-fill fs-4 text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100 border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-secondary small mb-1">Customers Retained</p>
+                            <h3 class="fw-bold text-success mb-0">{{ retained }}</h3>
+                        </div>
+                        <div class="bg-success bg-opacity-10 rounded-3 p-2">
+                            <i class="bi bi-person-check-fill fs-4 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100 border-0">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <p class="text-secondary small mb-1">Churn Rate</p>
+                            <h3 class="fw-bold text-warning mb-0">{{ churn_rate }}%</h3>
+                        </div>
+                        <div class="bg-warning bg-opacity-10 rounded-3 p-2">
+                            <i class="bi bi-graph-down-arrow fs-4 text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-lg-6">
+            <div class="card dashboard-card h-100 border-0">
+                <div class="card-header border-0 bg-transparent pt-3 pb-0">
+                    <h6 class="fw-semibold mb-0">
+                        <i class="bi bi-pie-chart-fill text-primary me-2"></i>
+                        Customer Distribution
+                    </h6>
+                </div>
+                <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 280px;">
+                    <canvas id="doughnutChart" style="max-height: 240px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card dashboard-card h-100 border-0">
+                <div class="card-header border-0 bg-transparent pt-3 pb-0">
+                    <h6 class="fw-semibold mb-0">
+                        <i class="bi bi-bar-chart-fill text-primary me-2"></i>
+                        Customer Sentiment
+                    </h6>
+                </div>
+                <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 280px;">
+                    <canvas id="barChart" style="max-height: 240px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- High Risk Customers -->
+    <div class="card dashboard-card border-0 mb-4">
+        <div class="card-header border-0 d-flex justify-content-between align-items-center">
+            <h6 class="fw-semibold mb-0">
+                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                High Risk Customers
+            </h6>
+            <span class="badge bg-danger bg-opacity-25 text-danger">Priority</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0 align-middle">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Name</th>
+                            <th>Segment</th>
+                            <th>Risk Level</th>
+                            <th>Confidence</th>
+                            <th>Predicted On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if high_risk_customers %}
+                            {% for row in high_risk_customers %}
+                            <tr>
+                                <td class="ps-4 fw-medium">{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>
+                                    <span class="badge bg-danger">{{ row[2] }}</span>
+                                </td>
+                                <td>{{ row[3] }}%</td>
+                                <td class="text-secondary">{{ row[4] }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-4">
+                                    No high risk customers found.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Predictions -->
+    <div class="card dashboard-card border-0">
+        <div class="card-header border-0">
+            <h6 class="fw-semibold mb-0">
+                <i class="bi bi-lightning-charge-fill text-primary me-2"></i>
+                Recent Predictions
+            </h6>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0 align-middle">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">Name</th>
+                            <th>Segment</th>
+                            <th>Risk Level</th>
+                            <th>Confidence</th>
+                            <th>Action Taken</th>
+                            <th>Predicted On</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_prediction %}
+                            {% for row in recent_prediction %}
+                            <tr>
+                                <td class="ps-4 fw-medium">{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>
+                                    {% if row[2] == "High Risk" %}
+                                        <span class="badge bg-danger">{{ row[2] }}</span>
+                                    {% elif row[2] == "Medium Risk" %}
+                                        <span class="badge bg-warning text-dark">{{ row[2] }}</span>
+                                    {% else %}
+                                        <span class="badge bg-success">{{ row[2] }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ row[3] }}%</td>
+                                <td>{{ row[4] }}</td>
+                                <td class="text-secondary">{{ row[5] }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    No predictions available.
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// Doughnut Chart - Customer Distribution
+new Chart(document.getElementById("doughnutChart"), {
+    type: "doughnut",
+    data: {
+        labels: ["Churned", "Retained"],
+        datasets: [{
+            data: [{{ churned }}, {{ retained }}],
+            backgroundColor: ["#ef4444", "#22c55e"],
+            borderWidth: 0,
+            hoverOffset: 8
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: "bottom",
+                labels: {
+                    color: "#94a3b8",
+                    padding: 16,
+                    usePointStyle: true
+                }
+            }
+        },
+        cutout: "65%"
+    }
+});
+
+// Bar Chart - Sentiment
+new Chart(document.getElementById("barChart"), {
+    type: "bar",
+    data: {
+        labels: ["Positive", "Negative", "Neutral"],
+        datasets: [{
+            label: "Feedback Count",
+            data: [{{ positive }}, {{ negative }}, {{ neutral }}],
+            backgroundColor: ["#22c55e", "#ef4444", "#64748b"],
+            borderRadius: 6,
+            borderSkipped: false,
+            maxBarThickness: 48
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            x: {
+                ticks: { color: "#94a3b8" },
+                grid: { display: false }
+            },
+            y: {
+                ticks: { color: "#94a3b8" },
+                grid: { color: "rgba(148, 163, 184, 0.1)" },
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+
+{% endblock %}

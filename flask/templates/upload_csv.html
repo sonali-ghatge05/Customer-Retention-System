@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+
+            <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+                <!-- Header -->
+                <div class="bg-primary bg-gradient text-white px-4 py-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-white bg-opacity-25 rounded-circle d-flex align-items-center justify-content-center"
+                             style="width: 52px; height: 52px;">
+                            <i class="bi bi-cloud-arrow-up-fill fs-3"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0 fw-semibold">Upload Customers</h4>
+                            <p class="mb-0 opacity-75 small">Import customer records from a CSV file</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="card-body p-4 p-md-5">
+
+                    <!-- Flash Messages -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- Upload Form -->
+                    <form method="POST" action="/upload-csv" enctype="multipart/form-data">
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">Select CSV File <span class="text-danger">*</span></label>
+                            <input type="file"
+                                   class="form-control form-control-lg"
+                                   name="file"
+                                   accept=".csv"
+                                   required>
+                            <div class="form-text mt-2">
+                                Accepted format: <strong>.csv</strong> only
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-upload me-2"></i>Upload Customers
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-4">
+                        <a href="/customers" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-left me-1"></i> Back to Customers
+                        </a>
+                    </div>
+
+                    <!-- Required Columns -->
+                    <div class="card border mt-4">
+                        <div class="card-header bg-light fw-semibold" style="color: #1e293b !important;">
+                            <i class="bi bi-table me-2 text-primary"></i>
+                            Required CSV Columns
+                        </div>
+                        <div class="card-body py-3">
+                            <code class="small">
+                                name, email, age, gender, location, segment, churned, join_date
+                            </code>
+                        </div>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div class="card border mt-3">
+                        <div class="card-header bg-light fw-semibold" style="color: #1e293b !important;">
+                            <i class="bi bi-info-circle me-2 text-primary"></i>
+                            Instructions
+                        </div>
+                        <div class="card-body py-3">
+                            <ul class="mb-0 small text-muted">
+                                <li>Upload only <strong>.csv</strong> files.</li>
+                                <li>The file must contain the exact required column names.</li>
+                                <li>Do not remove or rename any required columns.</li>
+                                <li>Each row should represent one customer.</li>
+                                <li>Ensure email addresses are valid and unique.</li>
+                                <li>Use <strong>0</strong> for Active (Retained) and <strong>1</strong> for Churned.</li>
+                                <li>Join date must be in <strong>YYYY-MM-DD</strong> format.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid px-4 py-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-file-earmark-text text-primary me-2"></i>
+                Customer Report
+            </h2>
+            <p class="text-muted mb-0">
+                Complete customer information including demographics, segmentation and churn status.
+            </p>
+            <small class="text-secondary">
+                Generated on: {{ current_date }}
+            </small>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="/report/customer/pdf" class="btn btn-primary">
+                <i class="bi bi-file-earmark-pdf me-2"></i>
+                Export PDF
+            </a>
+            <a href="/report/customer/csv" class="btn btn-success">
+                <i class="bi bi-filetype-csv me-2"></i>
+                Export CSV
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">Total Customers</p>
+                            <h3 class="fw-bold mb-0">{{ total }}</h3>
+                        </div>
+                        <i class="bi bi-people-fill fs-1 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">Active Customers</p>
+                            <h3 class="fw-bold text-success mb-0">{{ active }}</h3>
+                        </div>
+                        <i class="bi bi-check-circle-fill fs-1 text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">Churned Customers</p>
+                            <h3 class="fw-bold text-danger mb-0">{{ churned }}</h3>
+                        </div>
+                        <i class="bi bi-person-x-fill fs-1 text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">Premium Customers</p>
+                            <h3 class="fw-bold text-warning mb-0">{{ premium }}</h3>
+                        </div>
+                        <i class="bi bi-star-fill fs-1 text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-secondary mb-1">Churn Rate</p>
+                            <h3 class="fw-bold text-primary mb-0">{{ churn_rate }}%</h3>
+                        </div>
+                        <i class="bi bi-speedometer2 fs-1 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Customer Table -->
+    <div class="card dashboard-card">
+        <div class="card-header border-0">
+            <h5 class="mb-0 fw-semibold">
+                <i class="bi bi-table text-primary me-2"></i>
+                Customer Details
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th class="ps-4">ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Join Date</th>
+                            <th>Segment</th>
+                            <th>Status</th>
+                            <th>Location</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in customers %}
+                        <tr>
+                            <td class="ps-4">{{ customer[0] }}</td>
+                            <td class="fw-semibold text-white">{{ customer[1] }}</td>
+                            <td>{{ customer[2] }}</td>
+                            <td>{{ customer[3] }}</td>
+                            <td>
+                                {% if customer[4] == "Premium" %}
+                                    <span class="badge bg-warning text-dark">Premium</span>
+                                {% else %}
+                                    <span class="badge bg-primary">{{ customer[4] }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if customer[5] == 0 %}
+                                    <span class="badge bg-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger">Churned</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ customer[6] }}</td>
+                            <td>{{ customer[7] }}</td>
+                            <td>{{ customer[8] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
